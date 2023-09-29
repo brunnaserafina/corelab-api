@@ -6,7 +6,7 @@ export async function insertNewNote(newNote: INote) {
   const note = await notesRepository.insertNote(newNote);
 
   if (newNote.favorite) {
-    await favoritesRepository.favoriteNote(note.insertedId);
+    await favoritesRepository.insertFavoriteNote(note.insertedId);
   }
 
   return note;
