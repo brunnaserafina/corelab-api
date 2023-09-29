@@ -11,3 +11,29 @@ export async function insertNewNote(newNote: INote) {
 
   return note;
 }
+
+export async function findOtherNotes() {
+  const idsFavorites = await findFavoritesIds();
+
+  const otherNotes = await favoritesRepository.findAllNonFavoriteNotes(idsFavorites);
+
+  return rewriteConsultDatabase(otherNotes);
+}
+
+//utils
+async function rewriteConsultDatabase(notes) {
+  const rewriteConsult = notes.map((note) => {
+    const { _id, ...rest } = note;
+    return { id: _id, ...rest };
+  });
+
+  return rewriteConsult;
+}
+
+async function findFavoritesIds() {
+  const favorites = await favoritesRepository.findFavoriteIds();
+
+  const favoriteIds = favorites.map((favorite) => favorite.note_id);
+
+  return favoriteIds;
+}

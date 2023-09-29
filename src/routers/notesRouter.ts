@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { postNote } from "@/controllers/notesController";
+import { getOtherNotes, postNote } from "@/controllers/notesController";
 
 const notesRouter = Router();
 
-notesRouter.post("/", postNote);
+notesRouter
+  .post("/", postNote)
+  .get("/", getOtherNotes);
 
 export default notesRouter;
