@@ -1,4 +1,4 @@
-import { findOtherNotes, insertNewNote } from "@/services/notesService";
+import { findFavoriteNotes, findOtherNotes, insertNewNote } from "@/services/notesService";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
@@ -16,6 +16,16 @@ export async function postNote(req: Request, res: Response) {
 export async function getOtherNotes(_req: Request, res: Response) {
   try {
     const notes = await findOtherNotes();
+    return res.status(httpStatus.OK).json(notes);
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export async function getFavoriteNotes(_req: Request, res: Response) {
+  try {
+    const notes = await findFavoriteNotes();
     return res.status(httpStatus.OK).json(notes);
   } catch (err) {
     console.error(err);

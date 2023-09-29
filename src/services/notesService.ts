@@ -20,6 +20,14 @@ export async function findOtherNotes() {
   return rewriteConsultDatabase(otherNotes);
 }
 
+export async function findFavoriteNotes() {
+  const idsFavorites = await findFavoritesIds();
+
+  const favoriteNotes = await favoritesRepository.findAllFavoriteNotes(idsFavorites);
+
+  return rewriteConsultDatabase(favoriteNotes);
+}
+
 //utils
 async function rewriteConsultDatabase(notes) {
   const rewriteConsult = notes.map((note) => {
