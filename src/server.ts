@@ -1,10 +1,13 @@
-import app, { init } from './app';
+import app, { init } from "./app";
+import dotenv from "dotenv";
 
-const port = process.env.PORT || 3333;
+dotenv.config();
+
+const port = process.env.PORT;
 
 init().then(() => {
   app.listen(port, () => {
     /* eslint-disable-next-line no-console */
-    console.log('Running on port ' + port);
+    console.log("Running on port " + port);
   });
 });
