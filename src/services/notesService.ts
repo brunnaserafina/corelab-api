@@ -28,6 +28,12 @@ export async function findFavoriteNotes() {
   return rewriteConsultDatabase(favoriteNotes);
 }
 
+export async function removeNote(noteId) {
+  const removedNote = await notesRepository.deleteNote(noteId);
+
+  return removedNote;
+}
+
 //utils
 async function rewriteConsultDatabase(notes) {
   const rewriteConsult = notes.map((note) => {
