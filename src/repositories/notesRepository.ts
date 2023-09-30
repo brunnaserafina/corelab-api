@@ -16,23 +16,27 @@ export async function deleteNote(noteId: string): Promise<number>  {
 
   await database().collection(COLLECTIONS.FAVORITES).deleteOne({ note_id: objectId });
 
-  const deletedNote = await database().collection(COLLECTIONS.NOTES).deleteOne({
+  const result = await database().collection(COLLECTIONS.NOTES).deleteOne({
     _id: objectId,
   });
 
-  return deletedNote.deletedCount;
+  return result.deletedCount;
 }
 
-export async function updateColorNote(noteId: string, color: string): Promise<Document>  {
+export async function updateColorNote(noteId, color): Promise<number>  {
   const objectId = new ObjectId(noteId);
 
-  return await database().collection(COLLECTIONS.NOTES).updateOne({ _id: objectId }, { $set: { color } });
+  const result = await database().collection(COLLECTIONS.NOTES).updateOne({ _id: objectId }, { $set: { color } });
+
+  return result.modifiedCount;
 }
 
-export async function updateNote(note: INote): Promise<Document>  {
+export async function updateNote(note: INote): Promise<number>  {
   const objectId = new ObjectId(note.id);
 
-  return await database()
+  const result = await database()
     .collection(COLLECTIONS.NOTES)
     .updateOne({ _id: objectId }, { $set: { title: note.title, content: note.content } });
+
+  return result.modifiedCount
 }

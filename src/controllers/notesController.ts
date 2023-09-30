@@ -29,21 +29,27 @@ export async function getOtherNotes(_req: Request, res: Response) {
 
 export async function deleteNote(req: Request, res: Response) {
   try {
-    const noteId = req.params;
-    await removeNote(noteId);
+    const { id } = req.params;
+    await removeNote(id);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
+    if (err.name === "CannotDeleteNoteError") {
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
+    }
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
 
 export async function putColorNote(req: Request, res: Response) {
   try {
-    const noteId = req.params;
+    const { id } = req.params;
     const { color } = req.body;
-    await editColorNote(noteId, color);
+    await editColorNote(id, color);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
+    if (err.name === "CannotEditColorNoteError") {
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
+    }
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
@@ -54,6 +60,9 @@ export async function putNote(req: Request, res: Response) {
     await updateNote(note);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
+    if (err.name === "CannotUpdateNoteError") {
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
+    }
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
