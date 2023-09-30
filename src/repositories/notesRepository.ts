@@ -1,46 +1,38 @@
-import mongodb from "@/config/database";
+import { database } from "@/config/database";
 import { COLLECTIONS } from "@/enums/collections";
 import { INote } from "@/protocols";
-import { ObjectId } from "mongodb";
+import { ObjectId, Document } from "mongodb";
 
-export async function insertNote(data: INote) {
-  const db = await mongodb();
-
-  return await db.collection(COLLECTIONS.NOTES).insertOne({
+export async function insertNote(data: INote): Promise<Document> {
+  return await database().collection(COLLECTIONS.NOTES).insertOne({
     title: data.title,
     content: data.content,
     color: data.color,
   });
 }
 
-export async function deleteNote(noteId) {
-  const db = await mongodb();
-
+export async function deleteNote(noteId: string): Promise<number>  {
   const objectId = new ObjectId(noteId);
 
-  await db.collection(COLLECTIONS.FAVORITES).deleteOne({ note_id: objectId });
+  await database().collection(COLLECTIONS.FAVORITES).deleteOne({ note_id: objectId });
 
-  const deletedNote = await db.collection(COLLECTIONS.NOTES).deleteOne({
+  const deletedNote = await database().collection(COLLECTIONS.NOTES).deleteOne({
     _id: objectId,
   });
 
   return deletedNote.deletedCount;
 }
 
-export async function updateColorNote(noteId, color: string) {
-  const db = await mongodb();
-
+export async function updateColorNote(noteId: string, color: string): Promise<Document>  {
   const objectId = new ObjectId(noteId);
 
-  await db.collection(COLLECTIONS.NOTES).updateOne({ _id: objectId }, { $set: { color } });
+  return await database().collection(COLLECTIONS.NOTES).updateOne({ _id: objectId }, { $set: { color } });
 }
 
-export async function updateNote(note) {
-  const db = await mongodb();
-
+export async function updateNote(note: INote): Promise<Document>  {
   const objectId = new ObjectId(note.id);
 
-  await db
+  return await database()
     .collection(COLLECTIONS.NOTES)
     .updateOne({ _id: objectId }, { $set: { title: note.title, content: note.content } });
 }

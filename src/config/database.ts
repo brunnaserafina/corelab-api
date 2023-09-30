@@ -1,16 +1,19 @@
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const mongoClient = new MongoClient(process.env.MONGO_URI);
+let dbInstance: Db;
 
-export default async function mongodb() {
-  try {
-    const connect = mongoClient.db("corenotes");
-    return connect;
-  } catch (error) {
-    console.log(error);
-    return error;
+async function connectToDatabase(): Promise<void> {
+  const mongoClient = new MongoClient(process.env.MONGO_URI);
+  await mongoClient.connect();
+  dbInstance = mongoClient.db("corenotes");
+}
+
+export function database(): Db {
+  if (!dbInstance) {
+    connectToDatabase();
   }
+  return dbInstance;
 }
