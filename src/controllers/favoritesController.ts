@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { findFavoriteNotes, insertFavoriteNote, deleteFavoriteNote } from "@/services/notesService";
+import {
+  findFavoriteNotes,
+  insertFavoriteNote,
+  deleteFavoriteNote,
+} from "@/services/favoritesService";
 
 export async function getFavoriteNotes(_req: Request, res: Response) {
   try {
