@@ -5,3 +5,8 @@ export interface INote {
   color: string;
   favorite?: boolean;
 }
+
+export interface ApplicationError {
+  name: string;
+  message: string;
+}

@@ -1,25 +1,20 @@
 import { Router } from "express";
-import {
-  deleteFavorite,
-  deleteNote,
-  getFavoriteNotes,
-  getOtherNotes,
-  postFavorite,
-  postNote,
-  putColorNote,
-  putNote,
-} from "@/controllers/notesController";
+import * as notesController from "@/controllers/notesController";
+import { validateBody, validateParams } from "@/middlewares/validationMiddleware";
+import { colorSchema, noteIdSchema, noteSchema } from "@/middlewares/schemas/notesSchema";
 
 const notesRouter = Router();
 
 notesRouter
-  .post("/", postNote)
-  .get("/", getOtherNotes)
-  .get("/favorites", getFavoriteNotes)
-  .delete("/:id", deleteNote)
-  .put("/:id", putColorNote)
-  .post("/favorites/:id", postFavorite)
-  .delete("/favorites/:id", deleteFavorite)
-  .post("/edit", putNote);
+  .get("/", notesController.getOtherNotes)
+  .post("/", validateBody(noteSchema), notesController.postNote)
+  .put("/", validateBody(noteSchema), notesController.putNote)
+  .delete("/:id", validateParams(noteIdSchema), notesController.deleteNote)
+  .put(
+    "/color/:id",
+    validateParams(noteIdSchema),
+    validateBody(colorSchema),
+    notesController.putColorNote
+  );
 
 export default notesRouter;
