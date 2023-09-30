@@ -1,23 +1,19 @@
-import { updateColorNote } from "@/repositories/notesRepository";
-import {
-  findFavoriteNotes,
-  findOtherNotes,
-  insertFavoriteNote,
-  insertNewNote,
-  removeNote,
-  deleteFavoriteNote,
-  updateNote,
-} from "@/services/notesService";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import {
+  findOtherNotes,
+  insertNewNote,
+  removeNote,
+  updateNote,
+  editColorNote,
+} from "@/services/notesService";
 
 export async function postNote(req: Request, res: Response) {
   try {
     const note = req.body;
     await insertNewNote(note);
-    return res.sendStatus(httpStatus.CREATED);
+    return res.status(httpStatus.CREATED).send({ message: "Nota criada com sucesso!" });
   } catch (err) {
-    console.error(err);
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -27,17 +23,6 @@ export async function getOtherNotes(_req: Request, res: Response) {
     const notes = await findOtherNotes();
     return res.status(httpStatus.OK).json(notes);
   } catch (err) {
-    console.error(err);
-    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
-  }
-}
-
-export async function getFavoriteNotes(_req: Request, res: Response) {
-  try {
-    const notes = await findFavoriteNotes();
-    return res.status(httpStatus.OK).json(notes);
-  } catch (err) {
-    console.error(err);
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -48,7 +33,6 @@ export async function deleteNote(req: Request, res: Response) {
     await removeNote(noteId);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
-    console.error(err);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
@@ -57,32 +41,9 @@ export async function putColorNote(req: Request, res: Response) {
   try {
     const noteId = req.params;
     const { color } = req.body;
-    await updateColorNote(noteId, color);
+    await editColorNote(noteId, color);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
-    console.error(err);
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
-  }
-}
-
-export async function postFavorite(req: Request, res: Response) {
-  try {
-    const noteId = req.params;
-    await insertFavoriteNote(noteId);
-    return res.sendStatus(httpStatus.OK);
-  } catch (err) {
-    console.error(err);
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
-  }
-}
-
-export async function deleteFavorite(req: Request, res: Response) {
-  try {
-    const noteId = req.params;
-    await deleteFavoriteNote(noteId);
-    return res.sendStatus(httpStatus.OK);
-  } catch (err) {
-    console.error(err);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
@@ -93,7 +54,6 @@ export async function putNote(req: Request, res: Response) {
     await updateNote(note);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
-    console.error(err);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
