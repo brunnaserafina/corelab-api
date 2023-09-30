@@ -5,7 +5,8 @@ import {
   insertFavoriteNote,
   insertNewNote,
   removeNote,
-  deleteFavoriteNote
+  deleteFavoriteNote,
+  updateNote,
 } from "@/services/notesService";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
@@ -79,6 +80,17 @@ export async function deleteFavorite(req: Request, res: Response) {
   try {
     const noteId = req.params;
     await deleteFavoriteNote(noteId);
+    return res.sendStatus(httpStatus.OK);
+  } catch (err) {
+    console.error(err);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
+  }
+}
+
+export async function putNote(req: Request, res: Response) {
+  try {
+    const note = req.body;
+    await updateNote(note);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
     console.error(err);

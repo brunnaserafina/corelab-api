@@ -50,6 +50,11 @@ export async function deleteFavoriteNote(noteId) {
   return deletedFavorite;
 }
 
+export async function updateNote(note) {
+  const updatedNote = await notesRepository.updateNote(note);
+  return updatedNote;
+}
+
 //utils
 async function rewriteConsultDatabase(notes) {
   const rewriteConsult = notes.map((note) => {
@@ -62,8 +67,6 @@ async function rewriteConsultDatabase(notes) {
 
 async function findFavoritesIds() {
   const favorites = await favoritesRepository.findFavoriteIds();
-
   const favoriteIds = favorites.map((favorite) => favorite.note_id);
-  console.log(favoriteIds);
   return favoriteIds;
 }

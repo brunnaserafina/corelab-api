@@ -7,6 +7,7 @@ import {
   postFavorite,
   postNote,
   putColorNote,
+  putNote,
 } from "@/controllers/notesController";
 
 const notesRouter = Router();
@@ -18,6 +19,7 @@ notesRouter
   .delete("/:id", deleteNote)
   .put("/:id", putColorNote)
   .post("/favorites/:id", postFavorite)
-  .delete("/favorites/:id", deleteFavorite);
+  .delete("/favorites/:id", deleteFavorite)
+  .post("/edit", putNote);
 
 export default notesRouter;

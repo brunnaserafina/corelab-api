@@ -34,3 +34,13 @@ export async function updateColorNote(noteId, color: string) {
 
   await db.collection(COLLECTIONS.NOTES).updateOne({ _id: objectId }, { $set: { color } });
 }
+
+export async function updateNote(note) {
+  const db = await mongodb();
+
+  const objectId = new ObjectId(note.id);
+
+  await db
+    .collection(COLLECTIONS.NOTES)
+    .updateOne({ _id: objectId }, { $set: { title: note.title, content: note.content } });
+}
