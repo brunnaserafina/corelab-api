@@ -34,6 +34,22 @@ export async function removeNote(noteId) {
   return removedNote;
 }
 
+export async function editColorNote(noteId, color: string) {
+  const updatedNote = await notesRepository.updateColorNote(noteId, color);
+
+  return updatedNote;
+}
+
+export async function insertFavoriteNote(noteId) {
+  const favoritedNote = await favoritesRepository.insertFavoriteNote(noteId.id);
+  return favoritedNote;
+}
+
+export async function deleteFavoriteNote(noteId) {
+  const deletedFavorite = await favoritesRepository.deleteFavoriteNote(noteId);
+  return deletedFavorite;
+}
+
 //utils
 async function rewriteConsultDatabase(notes) {
   const rewriteConsult = notes.map((note) => {
@@ -48,6 +64,6 @@ async function findFavoritesIds() {
   const favorites = await favoritesRepository.findFavoriteIds();
 
   const favoriteIds = favorites.map((favorite) => favorite.note_id);
-
+  console.log(favoriteIds);
   return favoriteIds;
 }

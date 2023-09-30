@@ -26,3 +26,11 @@ export async function deleteNote(noteId) {
 
   return deletedNote.deletedCount;
 }
+
+export async function updateColorNote(noteId, color: string) {
+  const db = await mongodb();
+
+  const objectId = new ObjectId(noteId);
+
+  await db.collection(COLLECTIONS.NOTES).updateOne({ _id: objectId }, { $set: { color } });
+}
