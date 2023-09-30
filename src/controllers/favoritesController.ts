@@ -17,20 +17,28 @@ export async function getFavoriteNotes(_req: Request, res: Response) {
 
 export async function postFavorite(req: Request, res: Response) {
   try {
-    const noteId = req.params;
-    await insertFavoriteNote(noteId);
+    const { id } = req.params;
+    await insertFavoriteNote(id);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
+    if (err.name === "InvalidNoteIdError") {
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
+    }
+
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }
 
 export async function deleteFavorite(req: Request, res: Response) {
   try {
-    const noteId = req.params;
-    await deleteFavoriteNote(noteId);
+    const { id } = req.params;
+    await deleteFavoriteNote(id);
     return res.sendStatus(httpStatus.OK);
   } catch (err) {
+    if (err.name === "InvalidNoteIdError" || err.name === "CannotUnfavoriteError") {
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
+    }
+
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err);
   }
 }

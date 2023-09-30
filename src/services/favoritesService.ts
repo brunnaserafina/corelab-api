@@ -1,21 +1,29 @@
+import { cannotUnfavoriteError } from "@/errors/cannotUnfavoriteError";
+import { invalidNoteIdError } from "@/errors/invalidNoteIdError";
 import * as favoritesRepository from "@/repositories/favoritesRepository";
+import { ObjectId } from "mongodb";
 
 export async function findFavoriteNotes() {
   const idsFavorites = await findFavoritesIds();
-
   const favoriteNotes = await favoritesRepository.findAllFavoriteNotes(idsFavorites);
-
   return rewriteConsultDatabase(favoriteNotes);
 }
 
-export async function insertFavoriteNote(noteId) {
-  const favoritedNote = await favoritesRepository.insertFavoriteNote(noteId.id);
+export async function insertFavoriteNote(noteId: string) {
+  checkNoteIdIsValid(noteId);
+
+  const favoritedNote = await favoritesRepository.insertFavoriteNote(noteId);
   return favoritedNote;
 }
 
-export async function deleteFavoriteNote(noteId) {
+export async function deleteFavoriteNote(noteId: string) {
+  checkNoteIdIsValid(noteId);
+
   const deletedFavorite = await favoritesRepository.deleteFavoriteNote(noteId);
-  return deletedFavorite;
+
+  if (!deletedFavorite) {
+    throw cannotUnfavoriteError();
+  }
 }
 
 //utils
@@ -32,4 +40,10 @@ export async function findFavoritesIds() {
   const favorites = await favoritesRepository.findFavoriteIds();
   const favoriteIds = favorites.map((favorite) => favorite.note_id);
   return favoriteIds;
+}
+
+export function checkNoteIdIsValid(noteId: string) {
+  if (!ObjectId.isValid(noteId)) {
+    throw invalidNoteIdError();
+  }
 }

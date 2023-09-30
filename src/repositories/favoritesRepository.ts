@@ -2,7 +2,7 @@ import { database } from "@/config/database";
 import { COLLECTIONS } from "@/enums/collections";
 import { ObjectId, Document } from "mongodb";
 
-export async function insertFavoriteNote(noteId: string | ObjectId): Promise<Document> {
+export async function insertFavoriteNote(noteId: string | ObjectId) {
   const id = typeof noteId === "string" ? new ObjectId(noteId) : noteId;
 
   return await database().collection(COLLECTIONS.FAVORITES).insertOne({
@@ -10,12 +10,14 @@ export async function insertFavoriteNote(noteId: string | ObjectId): Promise<Doc
   });
 }
 
-export async function deleteFavoriteNote(noteId: string): Promise<Document> {
+export async function deleteFavoriteNote(noteId: string) {
   const objectId = new ObjectId(noteId);
 
-  return await database().collection(COLLECTIONS.FAVORITES).deleteOne({
+  const result = await database().collection(COLLECTIONS.FAVORITES).deleteOne({
     note_id: objectId,
   });
+
+  return result.deletedCount;
 }
 
 export async function findFavoriteIds(): Promise<Document[]> {
