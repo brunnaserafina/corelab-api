@@ -1,6 +1,7 @@
 import joi from "joi";
 
 const noteSchema = joi.object({
+  id: joi.string(),
   title: joi.string().min(0).required(),
   content: joi.string().min(1).required(),
   color: joi
